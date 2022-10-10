@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">DiceRollerCustom</string>
+
+    <string name="roll">Roll</string>
+
+    <string name="dice_1">go to gym</string>
+    <string name="dice_2">learn a language</string>
+    <string name="dice_3">learn to code</string>
+    <string name="dice_4">clean your room</string>
+    <string name="dice_5">go out with her</string>
+    <string name="dice_6">go out with friends</string>
+</resources>
