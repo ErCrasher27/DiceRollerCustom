@@ -18,8 +18,16 @@ class DiceRollerCustomViewModel : ViewModel() {
         }
     }
 
+    fun updateHistory(result: Int) {
+        _uiState.value.history.add(result)
+    }
+
     private fun rollRandom(): Int {
         return (1..6).random()
+    }
+
+    fun clearHistory() {
+        _uiState.value.history.clear()
     }
 }
 

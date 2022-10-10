@@ -2,6 +2,7 @@
     <string name="app_name">DiceRollerCustom</string>
 
     <string name="roll">Roll</string>
+    <string name="clear_history">Clear History</string>
 
     <string name="dice_1">go to gym</string>
     <string name="dice_2">learn a language</string>

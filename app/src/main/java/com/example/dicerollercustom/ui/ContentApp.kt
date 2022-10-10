@@ -1,10 +1,11 @@
 package com.example.dicerollercustom.ui
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CropRotate
 import androidx.compose.material3.*
@@ -22,37 +23,15 @@ import com.example.dicerollercustom.R
 fun ContentApp(
     modifier: Modifier = Modifier,
     numberRolled: Int,
+    history: MutableList<Int>,
+    clearHistory: () -> Unit
 ) {
-    val imageResource = when (numberRolled) {
-        1 -> R.drawable.dice_1
-        2 -> R.drawable.dice_2
-        3 -> R.drawable.dice_3
-        4 -> R.drawable.dice_4
-        5 -> R.drawable.dice_5
-        else -> R.drawable.dice_6
-    }
-
-    val stringResource = when (numberRolled) {
-        1 -> R.string.dice_1
-        2 -> R.string.dice_2
-        3 -> R.string.dice_3
-        4 -> R.string.dice_4
-        5 -> R.string.dice_5
-        else -> R.string.dice_6
-    }
-
-    val randomColor = when (numberRolled) {
-        1 -> Color.Red
-        2 -> Color.Yellow
-        3 -> Color.Blue
-        4 -> Color.Magenta
-        5 -> Color.Green
-        else -> Color.Cyan
-    }
+    val imageResource = getImageResourceByResult(numberRolled)
+    val stringResource = getStringResourceByResult(numberRolled)
+    val randomColor = getColorByResult(numberRolled)
 
     Column(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -64,6 +43,14 @@ fun ContentApp(
             color = randomColor
         )
         ShowPhrase(phrase = stringResource)
+        HistoryRoll(history = history)
+        Spacer(modifier = Modifier.height(10.dp))
+        OutlinedButton(
+            onClick = clearHistory,
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+        ) {
+            Text(text = stringResource(R.string.clear_history))
+        }
     }
 }
 
@@ -86,12 +73,10 @@ fun FABRoll(
 @Composable
 fun ShowDice(
     modifier: Modifier = Modifier,
-    @DrawableRes dice: Int,
+    dice: Int,
     numberRolled: Int
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -100,7 +85,6 @@ fun ShowDice(
             contentDescription = null
         )
         Text(text = numberRolled.toString(), style = MaterialTheme.typography.titleLarge)
-
     }
 }
 
@@ -124,5 +108,76 @@ fun ShowPhrase(
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.headlineMedium
         )
+    }
+}
+
+@Composable
+fun HistoryRoll(
+    modifier: Modifier = Modifier,
+    history: MutableList<Int>
+) {
+    Row(
+        modifier
+            .horizontalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .height(150.dp)
+            .padding(20.dp)
+            .clip(shape = MaterialTheme.shapes.large)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        history.forEach {
+            HistoryItem(dice = it)
+        }
+    }
+}
+
+@Composable
+fun HistoryItem(
+    modifier: Modifier = Modifier,
+    dice: Int
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            modifier = modifier.size(80.dp),
+            painter = painterResource(id = getImageResourceByResult(dice)),
+            contentDescription = null
+        )
+        Text(text = dice.toString())
+    }
+}
+
+private fun getImageResourceByResult(result: Int): Int {
+    return when (result) {
+        1 -> R.drawable.dice_1
+        2 -> R.drawable.dice_2
+        3 -> R.drawable.dice_3
+        4 -> R.drawable.dice_4
+        5 -> R.drawable.dice_5
+        else -> R.drawable.dice_6
+    }
+}
+
+private fun getStringResourceByResult(result: Int): Int {
+    return when (result) {
+        1 -> R.string.dice_1
+        2 -> R.string.dice_2
+        3 -> R.string.dice_3
+        4 -> R.string.dice_4
+        5 -> R.string.dice_5
+        else -> R.string.dice_6
+    }
+}
+
+private fun getColorByResult(result: Int): Color {
+    return when (result) {
+        1 -> Color.Red
+        2 -> Color.Yellow
+        3 -> Color.Blue
+        4 -> Color.Magenta
+        5 -> Color.Green
+        else -> Color.Cyan
     }
 }
